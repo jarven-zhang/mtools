@@ -286,8 +286,15 @@ void timerhandler(void)
 {
 	int iRet;
 	static int iCounter = 1;
+	//char buffer[8];
 	
 	sprintf( handler_par.achOut, "%d", iCounter );
+	
+	//replace the first 8 in text
+	// handler_par.achOut[0] = "1";
+	// printf("%c\n",handler_par.achOut[0]);
+	// printf("%c\n",handler_par.achOut[1]); 
+	
 	if (NUM) {
 		handler_par.achOut = (char *)(&iCounter);
 		handler_par.len = sizeof(iCounter);
@@ -301,6 +308,7 @@ void timerhandler(void)
 		exit(1);
 	}
 	iCounter++;
+	//exit the loop when limit is meet
 	if(iCounter > END_TIME ){
 		exit(0);
 	}
