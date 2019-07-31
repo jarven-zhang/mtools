@@ -45,6 +45,7 @@ char *TEST_ADDR = "224.1.1.1";
 int TEST_PORT = 4444;
 int TTL_VALUE = 1;
 int SLEEP_TIME = 1;
+int END_TIME=1000;
 unsigned long IP = INADDR_ANY;
 int NUM = 0;
 
@@ -139,6 +140,12 @@ int main(int argc, char *argv[])
 			ii++;
 			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
 				SLEEP_TIME = atoi(argv[ii]);
+				ii++;
+			}
+		} else if (strcmp(argv[ii], "-limit") == 0) {
+			ii++;
+			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
+				END_TIME = atoi(argv[ii]);
 				ii++;
 			}
 		} else if (strcmp(argv[ii], "-n") == 0) {
@@ -279,7 +286,8 @@ void timerhandler(void)
 {
 	int iRet;
 	static int iCounter = 1;
-
+	
+	sprintf( handler_par.achOut, "%d", iCounter );
 	if (NUM) {
 		handler_par.achOut = (char *)(&iCounter);
 		handler_par.len = sizeof(iCounter);
@@ -293,6 +301,9 @@ void timerhandler(void)
 		exit(1);
 	}
 	iCounter++;
+	if(iCounter > END_TIME ){
+		exit(0);
+	}
 	return;
 }
 
