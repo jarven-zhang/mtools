@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
 			rcvCountOld = rcvCountNew;
 		} else {
 			
-			char* ptr =strtok(achIn, "|");
+			char ptr[] =strtok(achIn, "|");
 			printf("%s\n",ptr);
 			// printf("Receive msg %d from %s:%d: %s\n",
 			//        iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
