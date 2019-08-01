@@ -289,11 +289,10 @@ void timerhandler(void)
 	int iRet;
 	static int iCounter = 1;
 	
-	char str[10] = {0};
+	char str[10] = {""};
 	itoa(iCounter,str,10);
-	//sprintf(handler_par.achOut , "%s hello world", str  );
 	
-	strcpy(handler_par.achOut,str);
+	strcat(handler_par.achOut,str);
 
 	
 	if (NUM) {
