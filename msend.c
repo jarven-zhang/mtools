@@ -290,7 +290,7 @@ void timerhandler(void)
 	static int iCounter = 1;
 	
 	itoa(iCounter,handler_par.achOut,10);
-	
+	handler_par.achOut[2]='\0';
 	
 
 	
