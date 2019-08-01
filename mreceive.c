@@ -45,6 +45,8 @@ int TEST_PORT = 4444;
 unsigned long IP[MAXIP];
 int NUM = 0;
 
+
+
 void printHelp(void)
 {
 	printf("mreceive version %s\n\
@@ -76,6 +78,8 @@ int main(int argc, char *argv[])
 	int starttime;
 	int curtime;
 	struct timeval tv;
+	int NUM_LIMIT=1000;
+	int NUM_PACKAGE=1000;
 
 /*
   if( argc < 2 ) {
@@ -119,7 +123,20 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[ii], "-n") == 0) {
 			ii++;
 			NUM = 1;
-		} else {
+		}else if (strcmp(argv[ii], "-limit") == 0) {
+			ii++;
+			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
+				NUM_LIMIT = atoi(argv[ii]);
+				ii++;
+			}
+		}
+		else if (strcmp(argv[ii], "-package") == 0) {
+			ii++;
+			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
+				NUM_PACKAGE = atoi(argv[ii]);
+				ii++;
+			}
+		}else {
 			printf("wrong parameters!\n\n");
 			printHelp();
 			return 1;
@@ -231,10 +248,16 @@ int main(int argc, char *argv[])
 			}
 			rcvCountOld = rcvCountNew;
 		} else {
-			printf("Receive msg %d from %s:%d: %s\n",
-			       iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
+			char delim[] = "|";
+			char *ptr =strtok(achIn,delim);
+			printf("%s\n",ptr);
+			// printf("Receive msg %d from %s:%d: %s\n",
+			//        iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
 		}
 		iCounter++;
+		if(iCounter > NUM_LIMIT ){
+			exit(0);
+		}
 	}
 
 	return 0;

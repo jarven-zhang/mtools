@@ -286,14 +286,11 @@ void timerhandler(void)
 {
 	int iRet;
 	static int iCounter = 1;
-	//char buffer[8];
 	
-	sprintf( handler_par.achOut, "%d", iCounter );
+
+	sprintf( handler_par.achOut, "%d|hello world", iCounter );
 	
-	//replace the first 8 in text
-	// handler_par.achOut[0] = "1";
-	// printf("%c\n",handler_par.achOut[0]);
-	// printf("%c\n",handler_par.achOut[1]); 
+
 	
 	if (NUM) {
 		handler_par.achOut = (char *)(&iCounter);
