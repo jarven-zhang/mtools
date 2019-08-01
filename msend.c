@@ -291,9 +291,9 @@ void timerhandler(void)
 	
 	char str[10] = {0};
 	itoa(iCounter,str,10);
-	sprintf(handler_par.achOut , "%s hello world", str  );
+	//sprintf(handler_par.achOut , "%s hello world", str  );
 	
-	
+	strcpy(handler_par.achOut,str);
 
 	
 	if (NUM) {
