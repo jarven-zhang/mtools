@@ -289,10 +289,9 @@ void timerhandler(void)
 	int iRet;
 	static int iCounter = 1;
 	
-	char str[10] = {""};
-	itoa(iCounter,str,10);
+	itoa(iCounter,handler_par.achOut,10);
 	
-	strcat(handler_par.achOut,str);
+	
 
 	
 	if (NUM) {
