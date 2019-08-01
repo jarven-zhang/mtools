@@ -250,9 +250,9 @@ int main(int argc, char *argv[])
 		} else {
 			
 			//char* ptr =strtok(achIn, "|");
-			printf("%s\n",achIn);
-			// printf("Receive msg %d from %s:%d: %s\n",
-			//        iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
+			// printf("%s\n",achIn);
+			printf("Receive msg %d from %s:%d: %s\n",
+			       iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
 		}
 		iCounter++;
 		if(iCounter > NUM_LIMIT ){
