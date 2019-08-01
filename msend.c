@@ -287,8 +287,8 @@ void timerhandler(void)
 	int iRet;
 	static int iCounter = 1;
 	
-
-	sprintf( handler_par.achOut, "%d hello world", iCounter );
+	handler_par.achOut= "13 hello world";
+	//sprintf( handler_par.achOut, "%d hello world", iCounter );
 	
 
 	
