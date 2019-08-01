@@ -48,8 +48,9 @@ int SLEEP_TIME = 1;
 int END_TIME=1000;
 unsigned long IP = INADDR_ANY;
 int NUM = 0;
-
+char RESULT[100];
 int join_flag = 0;		/* not join */
+
 
 typedef struct timerhandler_s {
 	int s;
@@ -287,8 +288,9 @@ void timerhandler(void)
 	int iRet;
 	static int iCounter = 1;
 	
-	handler_par.achOut= "13 hello world";
-	//sprintf( handler_par.achOut, "%d hello world", iCounter );
+	
+	sprintf( RESULT, "%d abcdefg", iCounter );
+	strcpy(handler_par.achOut,RESULT);
 	
 
 	
