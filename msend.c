@@ -288,7 +288,7 @@ void timerhandler(void)
 	static int iCounter = 1;
 	
 
-	sprintf( handler_par.achOut, "%d|hello world", iCounter );
+	sprintf( handler_par.achOut, "%d hello world", iCounter );
 	
 
 	
