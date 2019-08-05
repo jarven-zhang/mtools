@@ -40,6 +40,7 @@
 #endif
 #define LOOPMAX   20
 #define BUFSIZE   1024
+#define SEQ_SIZE 9
 
 char *TEST_ADDR = "224.1.1.1";
 int TEST_PORT = 4444;
@@ -288,10 +289,7 @@ void timerhandler(void)
 {
 	int iRet;
 	static int iCounter = 1;
-	
-	itoa(iCounter,handler_par.achOut,10);
-	handler_par.achOut[2]='\0';
-	
+
 
 	
 	if (NUM) {
@@ -299,6 +297,20 @@ void timerhandler(void)
 		handler_par.len = sizeof(iCounter);
 		printf("Sending msg %d, TTL %d, to %s:%d\n", iCounter, TTL_VALUE, TEST_ADDR, TEST_PORT);
 	} else {
+		char head_tag[SEQ_SIZE];
+		sprintf(head_tag, "%d", iCounter);
+		
+		int i = 0, j = 0;
+		for( ; i < SEQ_SIZE; i++)
+		{
+			if('\0' == head_tag[i])
+			{
+				break;
+			}
+			handler_par.achOut[j++] = head_tag[i];
+		}
+		handler_par.achOut[j++] = '|';
+
 		printf("Sending msg %d, TTL %d, to %s:%d: %s\n", iCounter, TTL_VALUE, TEST_ADDR, TEST_PORT, handler_par.achOut);
 	}
 	iRet = sendto(handler_par.s, handler_par.achOut, handler_par.len, handler_par.n, handler_par.stTo, handler_par.addr_size);
@@ -315,29 +327,7 @@ void timerhandler(void)
 }
 
 
-char* itoa(int value, char* result, int base) {
-    // check that the base if valid
-    if (base < 2 || base > 36) { *result = '\0'; return result; }
 
-    char* ptr = result, *ptr1 = result, tmp_char;
-    int tmp_value;
-
-    do {
-        tmp_value = value;
-        value /= base;
-        *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
-    } while ( value );
-
-    // Apply negative sign
-    if (tmp_value < 0) *ptr++ = '-';
-    *ptr-- = '\0';
-    while(ptr1 < ptr) {
-        tmp_char = *ptr;
-        *ptr--= *ptr1;
-        *ptr1++ = tmp_char;
-    }
-    return result;
-}
 /**
  * Local Variables:
  *  version-control: t
