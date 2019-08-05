@@ -246,8 +246,8 @@ int main(int argc, char *argv[])
 		} else {
 			// printf("Receive msg %d from %s:%d: %s\n\n",
 			      //  iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
-			printf("Receive msg from %s:%d: %s\n",
-			       inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
+			//printf("Receive msg from %s:%d: %s\n",
+			//       inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
 
 			//find the sequene
 			int i = 0, j = 0;

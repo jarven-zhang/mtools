@@ -78,7 +78,7 @@ Usage:  msend [-g GROUP] [-p PORT] [-join] [-i ADDRESS] [-t TTL] [-P PERIOD]\n\
                The default is to use the system default interface.\n\
   -join        Multicast sender will join the multicast group.\n\
                By default a sender never joins the group.\n\
-  -P PERIOD    Interval in milliseconds between packets.  Default 1000 msec\n\
+  -P PERIOD    PPI number  Default 1000 msec\n\
   -t TTL       The TTL value (1-255) used in the packets.  You must set\n\
                this higher if you want to route the traffic, otherwise\n\
                the first router will drop the packets!  Default: 1\n\
@@ -311,7 +311,7 @@ void timerhandler(void)
 		}
 		handler_par.achOut[j++] = '|';
 
-		printf("Sending msg %d, TTL %d, to %s:%d: %s\n", iCounter, TTL_VALUE, TEST_ADDR, TEST_PORT, handler_par.achOut);
+		//printf("Sending msg %d, TTL %d, to %s:%d: %s\n", iCounter, TTL_VALUE, TEST_ADDR, TEST_PORT, handler_par.achOut);
 	}
 	iRet = sendto(handler_par.s, handler_par.achOut, handler_par.len, handler_par.n, handler_par.stTo, handler_par.addr_size);
 	if (iRet < 0) {
@@ -321,6 +321,7 @@ void timerhandler(void)
 	iCounter++;
 	//exit the loop when limit is meet
 	if(iCounter > END_TIME ){
+		printf("Sent %d packages\n", END_TIME);
 		exit(0);
 	}
 	return;
