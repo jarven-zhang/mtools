@@ -39,13 +39,12 @@
 #define TTL_VALUE 2
 #define LOOPMAX   20
 #define MAXIP     16
+#define SEQ_SIZE 9
 
 char *TEST_ADDR = "224.1.1.1";
 int TEST_PORT = 4444;
 unsigned long IP[MAXIP];
 int NUM = 0;
-
-
 
 void printHelp(void)
 {
@@ -78,8 +77,6 @@ int main(int argc, char *argv[])
 	int starttime;
 	int curtime;
 	struct timeval tv;
-	int NUM_LIMIT=1000;
-	int NUM_PACKAGE=1000;
 
 /*
   if( argc < 2 ) {
@@ -99,6 +96,8 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
+  int effecivePacket = 0;
+	int receivedPacket = 0;
 
 	while (ii < argc) {
 		if (strcmp(argv[ii], "-g") == 0) {
@@ -123,19 +122,13 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[ii], "-n") == 0) {
 			ii++;
 			NUM = 1;
-		}else if (strcmp(argv[ii], "-limit") == 0) {
-			ii++;
-			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
-				NUM_LIMIT = atoi(argv[ii]);
-				ii++;
-			}
-		}
-		else if (strcmp(argv[ii], "-package") == 0) {
-			ii++;
-			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
-				NUM_PACKAGE = atoi(argv[ii]);
-				ii++;
-			}
+		} 
+		else if (strcmp(argv[ii], "-r") == 0) {
+			effecivePacket = atoi(argv[2]);
+			receivedPacket = atoi(argv[3]);
+			printf("------the efficeve num :%d, the stop num is : %d\n", 
+				effecivePacket, receivedPacket);
+			break;
 		}else {
 			printf("wrong parameters!\n\n");
 			printHelp();
@@ -208,6 +201,9 @@ int main(int argc, char *argv[])
 
 	printf("Now receiving from multicast group: %s\n", TEST_ADDR);
 
+	int countEffeciveNum = 0;
+	int countTotalNum = 0;
+
 	for (i = 0;; i++) {
 		socklen_t addr_size = sizeof(struct sockaddr_in);
 		static int iCounter = 1;
@@ -248,16 +244,31 @@ int main(int argc, char *argv[])
 			}
 			rcvCountOld = rcvCountNew;
 		} else {
-			
-			//char* ptr =strtok(achIn, "|");
-			// printf("%s\n",achIn);
-			printf("Receive msg %d from %s:%d: %s\n",
-			       iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
+			// printf("Receive msg %d from %s:%d: %s\n\n",
+			      //  iCounter, inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
+			printf("Receive msg from %s:%d: %s\n",
+			       inet_ntoa(stFrom.sin_addr), ntohs(stFrom.sin_port), achIn);
+
+			//find the sequene
+			int i = 0, j = 0;
+			char tmpNum[SEQ_SIZE] = "";
+			while('\0' != achIn[i] && '|' != achIn[i])
+			{
+					tmpNum[j++] = achIn[i++];
+			}
+
+			if(atoi(tmpNum) <= effecivePacket)
+			{
+					countEffeciveNum++;
+			}
+
+			if(++countTotalNum == receivedPacket)
+			{
+				printf("We have receive msg number :%d, in num : %d\n", countEffeciveNum, effecivePacket);
+				return 0; //stop 
+			}
 		}
 		iCounter++;
-		if(iCounter > NUM_LIMIT ){
-			exit(0);
-		}
 	}
 
 	return 0;
