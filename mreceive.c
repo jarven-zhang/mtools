@@ -59,6 +59,8 @@ Usage: mreceive [-g GROUP] [-p PORT] [-i ADDRESS ] ... [-i ADDRESS] [-n]\n\
   -n           Interpret the contents of the message as a number instead of\n\
                a string of characters.  Use this with `msend -n`\n\
   -v           Print version information.\n\
+  -effective   Effective packages \n\
+  -limit	   Stop packages number \n\
   -h           Print the command usage.\n\n", VERSION);
 }
 
@@ -122,14 +124,27 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[ii], "-n") == 0) {
 			ii++;
 			NUM = 1;
+		}else if (strcmp(argv[ii], "-effective") == 0) {
+			ii++;
+			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
+				effecivePacket = atoi(argv[ii]);
+				ii++;
+			}
+		}else if (strcmp(argv[ii], "-limit") == 0) {
+			ii++;
+			if ((ii < argc) && !(strchr(argv[ii], '-'))) {
+				receivedPacket = atoi(argv[ii]);
+				ii++;
+			}
 		} 
-		else if (strcmp(argv[ii], "-r") == 0) {
-			effecivePacket = atoi(argv[2]);
-			receivedPacket = atoi(argv[3]);
-			printf("------the efficeve num :%d, the stop num is : %d\n", 
-				effecivePacket, receivedPacket);
-			break;
-		}else {
+		// else if (strcmp(argv[ii], "-r") == 0) {
+		// 	effecivePacket = atoi(argv[2]);
+		// 	receivedPacket = atoi(argv[3]);
+		// 	printf("------the efficeve num :%d, the stop num is : %d\n", 
+		// 		effecivePacket, receivedPacket);
+		// 	break;
+		// }
+		else {
 			printf("wrong parameters!\n\n");
 			printHelp();
 			return 1;
