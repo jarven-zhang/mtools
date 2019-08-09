@@ -327,8 +327,7 @@ void timerhandler(void)
 */
 int insertSequenceAndTimestamp(char *array, size_t lenth, int sequence)                                                                                             
 {
-    if(lenth < TIME_SIZE + SEQ_SIZE || NULL == array)
-    {
+    if(lenth < TIME_SIZE + SEQ_SIZE || NULL == array) {
         printf("the data is too short!! Please input longer!\n");
         return -1;
     }
@@ -340,15 +339,10 @@ int insertSequenceAndTimestamp(char *array, size_t lenth, int sequence)
     char head_tag[SEQ_SIZE];
     sprintf(head_tag, "%d", sequence);
     
-    for( ; i < SEQ_SIZE; i++)
-    {
-        if('\0' == head_tag[i])
-        {
-            break;
-        }
-        *p++ = head_tag[i];
+    while(*p != '\0' && head_tag[i] != '\0') {
+        *p++ = head_tag[i++];
     }
-
+	
     *p++ = '[';
 
     //2. insert timestamp
@@ -363,8 +357,7 @@ int insertSequenceAndTimestamp(char *array, size_t lenth, int sequence)
 
     //insert the timestamp
     i = 0;
-    while(*p != '\0' && tmpTimeArray[i] != '\0')
-    {
+    while(*p != '\0' && tmpTimeArray[i] != '\0') {
         *p++ = tmpTimeArray[i++];
     }
 
