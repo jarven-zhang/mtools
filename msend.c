@@ -40,7 +40,8 @@
 #endif
 #define LOOPMAX   20
 #define BUFSIZE   1024
-#define SEQ_SIZE 9
+#define SEQ_SIZE   9
+#define TIME_SIZE 18
 
 char *TEST_ADDR = "224.1.1.1";
 int TEST_PORT = 4444;
@@ -290,28 +291,15 @@ void timerhandler(void)
 	int iRet;
 	static int iCounter = 1;
 
-
-	
 	if (NUM) {
 		handler_par.achOut = (char *)(&iCounter);
 		handler_par.len = sizeof(iCounter);
 		printf("Sending msg %d, TTL %d, to %s:%d\n", iCounter, TTL_VALUE, TEST_ADDR, TEST_PORT);
 	} else {
-		char head_tag[SEQ_SIZE];
-		sprintf(head_tag, "%d", iCounter);
-		
-		int i = 0, j = 0;
-		for( ; i < SEQ_SIZE; i++)
-		{
-			if('\0' == head_tag[i])
-			{
-				break;
-			}
-			handler_par.achOut[j++] = head_tag[i];
-		}
-		handler_par.achOut[j++] = '|';
-
-		//printf("Sending msg %d, TTL %d, to %s:%d: %s\n", iCounter, TTL_VALUE, TEST_ADDR, TEST_PORT, handler_par.achOut);
+		if(0 != insertSequenceAndTimestamp(handler_par.achOut, strlen(handler_par.achOut), iCounter)){
+			printf("Error: The data what we send is too short!\n", END_TIME);
+			exit(0);
+		}	
 	}
 	iRet = sendto(handler_par.s, handler_par.achOut, handler_par.len, handler_par.n, handler_par.stTo, handler_par.addr_size);
 	if (iRet < 0) {
@@ -327,6 +315,65 @@ void timerhandler(void)
 	return;
 }
 
+/* 
+* args:
+*  - array   : The raw data ,it is also the return value.
+*  - lenth   : the lenth of raw data, it should be long enough
+*  - sequence: the message sequence
+*
+*  e.g.  begin: WWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+*        end  : 99999999[1565343077328587]WWW
+*
+*/
+int insertSequenceAndTimestamp(char *array, size_t lenth, int sequence)                                                                                             
+{
+    if(lenth < TIME_SIZE + SEQ_SIZE || NULL == array)
+    {
+        printf("the data is too short!! Please input longer!\n");
+        return -1;
+    }
+
+    char *p = array;
+    int i = 0;
+
+    //1. insert sequence
+    char head_tag[SEQ_SIZE];
+    sprintf(head_tag, "%d", sequence);
+    
+    for( ; i < SEQ_SIZE; i++)
+    {
+        if('\0' == head_tag[i])
+        {
+            break;
+        }
+        *p++ = head_tag[i];
+    }
+
+    *p++ = '[';
+
+    //2. insert timestamp
+    //get current timestamp
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    long us_time = tv.tv_sec * 1000000 + tv.tv_usec;
+    //printf("get current time, usec: %ld\n", us_time);
+
+    char tmpTimeArray[TIME_SIZE];
+    sprintf(tmpTimeArray, "%ld", us_time);
+
+    //insert the timestamp
+    i = 0;
+    while(*p != '\0' && tmpTimeArray[i] != '\0')
+    {
+        *p++ = tmpTimeArray[i++];
+    }
+
+    *p = ']';
+
+    //printf("%s\n", array);
+
+    return 0;
+}
 
 
 /**
