@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
 			//find the sequene
 			int i = 0, j = 0;
 			char tmpNum[SEQ_SIZE] = "";
-			while('\0' != achIn[i] && '|' != achIn[i])
+			while('\0' != achIn[i] && '[' != achIn[i])
 			{
 					tmpNum[j++] = achIn[i++];
 			}
